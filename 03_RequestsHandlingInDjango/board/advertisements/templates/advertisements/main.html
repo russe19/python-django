@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>
+            <label for="categor">Выберите категорию:</label>
+            <select id="categor" name="categor">
+                {% for i in category %}
+                    <option value_category={{i}}>{{i}}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label for="reg">Выберите регион:</label>
+            <select id="reg" name="reg">
+                {% for i in region %}
+                    <option value_region={{i}}>{{i}}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <input type="text" name="name_adv" placeholder="Название объявления" size="18" />
+        </p>
+        <p>
+            <input type="submit" value="Отправить" />
+        </p>
+    </form>
+</body>
+</html>

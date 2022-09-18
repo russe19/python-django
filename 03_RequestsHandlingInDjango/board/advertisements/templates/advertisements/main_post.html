@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ответ</title>
+</head>
+<body>
+<p>Запрос на поиск успешно выполнен</p>
+<p>Выбранная категория:{% for i in category %}
+                        {{ i }}
+                        {% endfor %}</p>
+<p>Выбранный регион: {% for i in region %}
+                        {{ i }}
+                        {% endfor %}</p>
+<p>Выбранное название объявления: {% for i in name %}
+                                    {{ i }}
+                                    {% endfor %}</p>
+</body>
+</html>
