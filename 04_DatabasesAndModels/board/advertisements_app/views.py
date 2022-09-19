@@ -11,3 +11,9 @@ class AdvertisementListView(ListView):
 
 class AdvertisementDetailView(DetailView):
     model = Advertisement
+
+    def get_object(self):
+        obj = super(AdvertisementDetailView, self).get_object()
+        obj.views_count += 1
+        obj.save()
+        return obj
