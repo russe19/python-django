@@ -1,0 +1,18 @@
+<html>
+    <h1>Бесплатные объявления</h1>
+    {% if news_list %}
+        <ul>
+            <li><h3><a href="/news/create">Создать новость</a></h3></li>
+        {% for news in news_list %}
+            <li>
+                <a href="/news/{{ news.id }}"><h3>{{ news.name }}</h3></a>
+                <p>Описание: {{ news.description }}</p>
+                <p>Дата создания: {{ news.create_date }}</p>
+                <p>Дата обновления: {{ news.update_date }}</p>
+                <p>Активность: {{ news.is_active }}</p>
+                <a href="/news/update{{ news.id }}"><h3>Редактировать: {{ news.name }}</h3></a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</html>
