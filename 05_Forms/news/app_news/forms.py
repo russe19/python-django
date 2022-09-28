@@ -10,9 +10,10 @@ class NewsForm(forms.ModelForm):
         fields = '__all__'
 
 
-class CommentForm(forms.ModelForm):
+class CommentForm(forms.Form):
+    # def __init__(self, news_id, *args, **kwargs):
+    #     super(CommentForm, self).__init__(*args, **kwargs)
 
+    user_name = forms.CharField()
+    text = forms.CharField(widget=forms.Textarea)
 
-    class Meta:
-        model = Comment
-        fields = '__all__'

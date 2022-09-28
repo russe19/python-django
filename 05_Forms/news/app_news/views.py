@@ -20,6 +20,22 @@ class NewsDetailView(DetailView):
         context['comment'] = Comment.objects.filter(news_name=kwargs['object'])
         return context
 
+    def post(self, request, news_id):
+        # comment.news_name = News.objects.get(id=news_id)
+        comment_form = CommentForm()
+        news = str(News.objects.get(id=news_id))
+        return render(request, 'app_news/create_comment.html',
+                      context={'comment_form': comment_form, 'news': news, 'news_id': news_id})
+
+class CreatedComment(View):
+
+    def post(self, request, news_id):
+        news = News.objects.get(id=news_id)
+        comment = Comment(user_name = request.POST['user_name'], text = request.POST['text'], news_name = news)
+        comment_form = NewsForm(request.POST, instance=comment)
+        comment.save()
+        return render(request, 'app_news/created_comment.html', context={'news_id': news_id})
+
 
 class CreateView(View):
 
@@ -67,22 +83,6 @@ class UpdateView(View):
             return render(request, 'app_news/created_news.html', context={'news_form': news_form})
         return render(request, 'app_news/update.html', context={'news_form': news_form, 'profile_id': profile_id})
 
-
-class CreateCommentView(View):
-
-    def get(self, request, news_id):
-        comment_form = CommentForm()
-        return render(request, 'app_news/create_comment.html', context={'comment_form': comment_form, 'news_id': news_id})
-
-    def post(self, request, news_id):
-        comment = Comment()
-        comment
-        comment_form = CommentForm(request.POST, instance=comment)
-
-        if comment_form.is_valid():
-            comment.save()
-            return render(request, 'app_news/created_comm.html', context={'comment_form': comment_form, 'news_id': news_id})
-        return render(request, 'app_news/create_comment.html', context={'comment_form': comment_form, 'news_id': news_id})
 
 
 

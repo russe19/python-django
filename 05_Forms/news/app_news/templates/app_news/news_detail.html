@@ -6,6 +6,8 @@
 </head>
 <body>
     {% if news %}
+    <form method="post" action="/comment/create{{ news.id }}">
+        {% csrf_token %}
         <h1>Подробное описание объявления {{ news.id }}</h1>
                 <p>Название объявления: {{ news.name }}</p>
                 <p>Описание: {{ news.description }}</p>
@@ -13,6 +15,8 @@
                 <p>Дата обновления: {{ news.update_date }}</p>
                 <p>Активность: {{ news.is_active }}</p>
                 <p>Для перехода на главную страницу нажмите <a href="/news_list">здесь</a></p>
+        <button type="submit">Создать комментарий</button>
+    </form>
     {% endif %}
     {% if comment %}
     <p>Комментарии:</p>
@@ -27,6 +31,5 @@
     {% else %}
     <p>Комментарии отсутствуют.</p>
     {% endif %}
-    <h3><a href="/comment/create{{ news.id }}">Создать комментарий</a></h3>
 </body>
 </html>

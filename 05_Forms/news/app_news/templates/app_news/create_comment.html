@@ -5,11 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-<form action="created_comment{{ news_id }}" method="post">
+<form action="created_comment/{{ news_id }}" method="post">
     {% csrf_token %}
+    <p>Новость: {{ news }}</p>
     {{ comment_form.as_p }}
-    {{ c }}
     <button type="submit">Сохранить</button>
+
 </form>
 </body>
 </html>
