@@ -9,7 +9,7 @@ class News(models.Model):
     is_active = models.BooleanField(verbose_name='Активность объявления')
 
     def __str__(self):
-        return self.name
+        return f'Новость: {self.name}, Дата публикации: {self.create_date}, Активность: {self.is_active}'
 
     class Meta:
         ordering = ['create_date']
@@ -19,5 +19,12 @@ class Comment(models.Model):
     text = models.TextField(verbose_name='Комментарий')
     news_name = models.ForeignKey('News', verbose_name='Новость', default=None, null=True,  on_delete=models.CASCADE,
                                 related_name='news')
+
+    def __str__(self):
+        if len(self.text) > 15:
+            text = self.text[:15]+'...'
+        else:
+            text = self.text
+        return f'Имя пользователя: {self.user_name}, Комментарий: {text}'
 
 

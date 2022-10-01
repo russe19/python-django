@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<form action="created_comment/{{ news_id }}" method="post">
+<form  method="post">
     {% csrf_token %}
     <p>Новость: {{ news }}</p>
     {{ comment_form.as_p }}

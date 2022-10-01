@@ -11,9 +11,11 @@ class NewsForm(forms.ModelForm):
 
 
 class CommentForm(forms.Form):
-    # def __init__(self, news_id, *args, **kwargs):
-    #     super(CommentForm, self).__init__(*args, **kwargs)
 
-    user_name = forms.CharField()
-    text = forms.CharField(widget=forms.Textarea)
+    user_name = forms.CharField(required=True)
+    text = forms.CharField(widget=forms.Textarea, required=True)
+
+    # class Meta:
+    #     model = News
+    #     fields = ['user_name', 'text']
 

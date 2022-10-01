@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View, DetailView, ListView
 from app_news.models import News, Comment
 from app_news.forms import NewsForm, CommentForm
@@ -21,20 +21,18 @@ class NewsDetailView(DetailView):
         return context
 
     def post(self, request, news_id):
-        # comment.news_name = News.objects.get(id=news_id)
-        comment_form = CommentForm()
-        news = str(News.objects.get(id=news_id))
-        return render(request, 'app_news/create_comment.html',
-                      context={'comment_form': comment_form, 'news': news, 'news_id': news_id})
-
-class CreatedComment(View):
-
-    def post(self, request, news_id):
-        news = News.objects.get(id=news_id)
-        comment = Comment(user_name = request.POST['user_name'], text = request.POST['text'], news_name = news)
-        comment_form = NewsForm(request.POST, instance=comment)
-        comment.save()
-        return render(request, 'app_news/created_comment.html', context={'news_id': news_id})
+        if request.POST.get('user_name'):
+            comment_form = CommentForm(request.POST, request.FILES)
+            if comment_form.is_valid():
+                comment = Comment(user_name=request.POST['user_name'],
+                                  text = request.POST['text'], news_name = News.objects.get(id=news_id))
+                comment.save()
+                return redirect('news_list')
+        else:
+            comment_form = CommentForm()
+            news = str(News.objects.get(id=news_id))
+            return render(request, 'app_news/create_comment.html',
+                          context={'comment_form': comment_form, 'news': news, 'news_id': news_id})
 
 
 class CreateView(View):
@@ -49,23 +47,7 @@ class CreateView(View):
 
         if news_form.is_valid():
             news.save()
-            return render(request, 'app_news/created_news.html', context={'news_form': news_form})
-        return render(request, 'app_news/create.html', context={'news_form': news_form})
-
-
-class CreateView(View):
-
-    def get(self, request):
-        news_form = NewsForm()
-        return render(request, 'app_news/create.html', context={'news_form': news_form})
-
-    def post(self, request):
-        news = News()
-        news_form = NewsForm(request.POST, instance=news)
-
-        if news_form.is_valid():
-            news.save()
-            return render(request, 'app_news/created_news.html', context={'news_form': news_form})
+            return redirect('news_list')
         return render(request, 'app_news/create.html', context={'news_form': news_form})
 
 class UpdateView(View):
@@ -80,7 +62,7 @@ class UpdateView(View):
         news_form = NewsForm(request.POST, instance=news)
         if news_form.is_valid():
             news.save()
-            return render(request, 'app_news/created_news.html', context={'news_form': news_form})
+            return redirect('news_list')
         return render(request, 'app_news/update.html', context={'news_form': news_form, 'profile_id': profile_id})
 
 
