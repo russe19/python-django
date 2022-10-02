@@ -7,15 +7,11 @@ class NewsForm(forms.ModelForm):
 
     class Meta:
         model = News
-        fields = '__all__'
+        fields = ['name', 'description', 'is_active']
 
 
 class CommentForm(forms.Form):
 
     user_name = forms.CharField(required=True)
     text = forms.CharField(widget=forms.Textarea, required=True)
-
-    # class Meta:
-    #     model = News
-    #     fields = ['user_name', 'text']
 

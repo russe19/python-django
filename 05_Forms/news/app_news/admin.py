@@ -7,7 +7,7 @@ class CommentInlines(admin.TabularInline):
 
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ['name', 'create_date', 'is_active']
+    list_display = ['name', 'create_date', 'update_date', 'is_active']
     list_filter = ['is_active']
     inlines = [CommentInlines]
     actions = ['deactivation', 'activation']
@@ -35,7 +35,7 @@ class CommentAdmin(admin.ModelAdmin):
 
 
     get_text.short_description = 'Описание'
-    list_display = ['user_name', 'get_text']
+    list_display = ['user_name', 'get_text', 'news_name']
     list_filter = ['user_name']
     actions = ['delete_comment']
 
