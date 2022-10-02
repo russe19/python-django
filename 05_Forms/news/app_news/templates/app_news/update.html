@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h3>Страница редактирования объявления</h3>
+    <form method="post" action="/news/updated_news{{ profile_id }}">
+        {% csrf_token %}
+        {{ news_form.as_p }}
+        <button type="submit">Сохранить</button>
+    </form>
+</body>
+</html>
