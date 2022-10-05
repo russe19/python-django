@@ -12,6 +12,12 @@ class NewsForm(forms.ModelForm):
 
 class CommentForm(forms.Form):
 
-    user_name = forms.CharField(required=True)
+    user_name = forms.CharField()
     text = forms.CharField(widget=forms.Textarea, required=True)
+
+
+class AuthForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
 

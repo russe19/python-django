@@ -1,5 +1,6 @@
 from django.contrib import admin
 from app_news.models import News, Comment
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 class CommentInlines(admin.TabularInline):
     model = Comment
