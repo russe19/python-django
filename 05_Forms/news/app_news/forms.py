@@ -10,10 +10,11 @@ class NewsForm(forms.ModelForm):
         fields = ['name', 'description', 'is_active']
 
 
-class CommentForm(forms.Form):
+class CommentForm(forms.ModelForm):
 
-    user_name = forms.CharField()
-    text = forms.CharField(widget=forms.Textarea, required=True)
+    class Meta:
+        model = Comment
+        fields = ['user_name', 'text']
 
 
 class AuthForm(forms.Form):

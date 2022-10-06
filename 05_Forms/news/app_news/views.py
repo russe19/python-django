@@ -26,33 +26,25 @@ class NewsDetailView(DetailView):
 
     def post(self, request, news_id):
         if request.POST.get('text'):
+            comment_form = CommentForm(request.POST)
             if request.user.is_authenticated:
-                comment_form = CommentForm(request.POST, request.FILES)
-                comment_form.fields.pop('user_name')
-                if comment_form.is_valid():
-                    comment = Comment(user_name=request.user.username,
-                                      text = request.POST['text'], news_name = News.objects.get(id=news_id))
-                    comment.save()
-                    return redirect('news_list')
+                comment_form.fields['user_name'].required = False
+                user_1 = request.user.username
             else:
-                comment_form = CommentForm(request.POST, request.FILES, )
-                if comment_form.is_valid():
-                    comment = Comment(user_name=request.POST['user_name'] + '(Аноним)',
-                                      text = request.POST['text'], news_name = News.objects.get(id=news_id))
-                    comment.save()
-                    return redirect('news_list')
+                user_1 = request.POST['user_name'] + '(Аноним)'
+            if comment_form.is_valid():
+                comment = Comment(user_name=user_1,
+                                  text = request.POST['text'], news_name = News.objects.get(id=news_id))
+                comment.save()
+                return redirect('news_list')
         else:
+            comment_form = CommentForm()
             if request.user.is_authenticated:
-                comment_form = CommentForm()
-                comment_form.fields.pop('user_name')
-                news = str(News.objects.get(id=news_id))
-                return render(request, 'app_news/create_comment.html',
+                comment_form.fields['user_name'].widget = forms.HiddenInput()
+            news = str(News.objects.get(id=news_id))
+            return render(request, 'app_news/create_comment.html',
                               context={'comment_form': comment_form, 'news': news, 'news_id': news_id})
-            else:
-                comment_form = CommentForm()
-                news = str(News.objects.get(id=news_id))
-                return render(request, 'app_news/create_comment.html',
-                              context={'comment_form': comment_form, 'news': news, 'news_id': news_id})
+
 
 class CreateNewsView(CreateView):
     form_class = NewsForm
