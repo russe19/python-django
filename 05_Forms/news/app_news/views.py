@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View, DetailView, ListView, CreateView, UpdateView
 from django.urls import reverse_lazy
+from django.contrib.auth.views import LoginView, LogoutView
 from app_news.models import News, Comment
 from app_news.forms import NewsForm, CommentForm
+from django.http import HttpResponse
+from django import forms
 
 
 class NewsView(ListView):
@@ -22,18 +25,25 @@ class NewsDetailView(DetailView):
         return context
 
     def post(self, request, news_id):
-        if request.POST.get('user_name'):
-            comment_form = CommentForm(request.POST, request.FILES)
+        if request.POST.get('text'):
+            comment_form = CommentForm(request.POST)
+            if request.user.is_authenticated:
+                comment_form.fields['user_name'].required = False
+                user_1 = request.user.username
+            else:
+                user_1 = request.POST['user_name'] + '(Аноним)'
             if comment_form.is_valid():
-                comment = Comment(user_name=request.POST['user_name'],
+                comment = Comment(user_name=user_1,
                                   text = request.POST['text'], news_name = News.objects.get(id=news_id))
                 comment.save()
                 return redirect('news_list')
         else:
             comment_form = CommentForm()
+            if request.user.is_authenticated:
+                comment_form.fields['user_name'].widget = forms.HiddenInput()
             news = str(News.objects.get(id=news_id))
             return render(request, 'app_news/create_comment.html',
-                          context={'comment_form': comment_form, 'news': news, 'news_id': news_id})
+                              context={'comment_form': comment_form, 'news': news, 'news_id': news_id})
 
 
 class CreateNewsView(CreateView):
@@ -51,6 +61,17 @@ class UpdateNewsView(UpdateView):
     form_class = NewsForm
     template_name = 'app_news/update.html'
     success_url = reverse_lazy('news_list')
+
+class Main(View):
+    def get(self, request):
+        return render(request, 'app_news/main.html')
+
+class ViewLogin(LoginView):
+    template_name = 'app_news/login.html'
+
+class ViewLogout(LogoutView):
+    template_name = 'app_news/logout.html'
+    next_page = 'main'
 
 
 

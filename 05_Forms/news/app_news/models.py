@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class News(models.Model):
@@ -17,8 +18,10 @@ class News(models.Model):
 class Comment(models.Model):
     user_name = models.CharField(verbose_name='Имя пользователя', max_length=50)
     text = models.TextField(verbose_name='Комментарий')
-    news_name = models.ForeignKey('News', verbose_name='Новость', default=None, null=True,  on_delete=models.CASCADE,
+    news_name = models.ForeignKey('News', verbose_name='Новость', default=None, null=True, on_delete=models.CASCADE,
                                 related_name='news')
+    user = models.ForeignKey(User, verbose_name='Пользователь', default=None, null=True, on_delete=models.CASCADE,
+                                related_name='user')
 
     def __str__(self):
         if len(self.text) > 15:
