@@ -10,6 +10,7 @@ urlpatterns = [
     path("news/create", views.CreateNewsView.as_view(), name='create'),
     path("news/<int:pk>", views.NewsDetailView.as_view(), name='detail'),
     path("comment/create<int:news_id>", views.NewsDetailView.as_view(), name='create_comment'),
-    path("users", views.UserVerView.as_view(), name='users')
+    path("users", views.UserVerView.as_view(), name='users'),
+    path("create_groups", views.create_groups, name='create_groups')
 ]
 

@@ -1,32 +1,36 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy
 from django.views.generic import View, ListView, DetailView, CreateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import permission_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionDenied
 from django.contrib.auth.models import Group, User
+from django.contrib.auth.decorators import user_passes_test
 from app_users.forms import AuthForm, RegisterForm, NewsForm, CommentForm
 from app_users.models import Profile, News, Comment
 from django import forms
 
-class VerificationRequired(LoginRequiredMixin):
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.profile.verification:
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
 
-class ModeratorRequired(LoginRequiredMixin):
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.groups.filter(name='Модераторы').exists():
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
+def create_groups(request):
+    if not Group.objects.filter(name='Обычные пользователи').exists():
+        Group.objects.create(name='Обычные пользователи')
+    if not Group.objects.filter(name='Верифицированные пользователи').exists():
+        Group.objects.create(name='Верифицированные пользователи')
+    if not Group.objects.filter(name='Модераторы').exists():
+        Group.objects.create(name='Модераторы')
+    return HttpResponse("<h3>Необходимые группы пользователей были успешно созданы, либо уже существуют</h3>"
+                            "<h3><a href='/news_list'>Страница новостей</a></h3>")
 
-class UserVerView(ModeratorRequired, ListView):
+
+class UserVerView(UserPassesTestMixin, ListView):
     model = User
     template_name = 'app_users/users.html'
     context_object_name = 'users'
     queryset = User.objects.filter(groups__name__icontains='пользователи')
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Модераторы').exists()
 
     def post(self, request):
         user = User.objects.get(id=request.POST.get('user.id'))
@@ -91,13 +95,16 @@ class NewsView(ListView):
         context['user'] = self.request.user.is_authenticated
         return context
 
+
     def post(self, request):
+        if not request.user.groups.filter(name='Модераторы').exists():
+            raise PermissionDenied()
         new = self.model.objects.get(id=request.POST.get('news.id'))
         new.is_active = request.POST.get('news.is_active')
         new.save()
-        group = Group.objects.get(name='Обычные пользователи')
         return redirect('news_list')
-        request.user.groups.filter(name__in=['Обычные пользователи', 'Верифицированные пользователи', 'Модераторы']).exists()
+
+        # request.user.groups.filter(name__in=['Обычные пользователи', 'Верифицированные пользователи', 'Модераторы']).exists()
 
 class NewsDetailView(DetailView):
     model = News
@@ -108,6 +115,7 @@ class NewsDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['comment'] = Comment.objects.filter(news_name=kwargs['object'])
         return context
+
 
     def post(self, request, news_id):
         if request.POST.get('text'):
@@ -131,10 +139,13 @@ class NewsDetailView(DetailView):
                               context={'comment_form': comment_form, 'news': news, 'news_id': news_id})
 
 
-class CreateNewsView(VerificationRequired, CreateView):
+class CreateNewsView(UserPassesTestMixin, CreateView):
     form_class = NewsForm
     template_name = 'app_users/create.html'
     success_url = reverse_lazy('news_list')
+
+    def test_func(self):
+        return self.request.user.profile.verification
 
 
     def get_context_data(self, object_list=None, **kwargs):
