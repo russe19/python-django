@@ -2,9 +2,6 @@ from django.contrib import admin
 from app_news.models import News, Comment
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
-class CommentInlines(admin.TabularInline):
-    model = Comment
-
 
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
@@ -20,25 +17,25 @@ class NewsAdmin(admin.ModelAdmin):
         queryset.update(is_active=True)
 
 
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
-    def get_text(self, object):
-        if len(object.text) > 15:
-            try:
-                return object.text[:15]+'...'
-            except:
-                return object.text
-        else:
-            try:
-                return object.text[:15]
-            except:
-                return object.text
-
-
-    get_text.short_description = 'Описание'
-    list_display = ['user_name', 'get_text', 'news_name']
-    list_filter = ['user_name']
-    actions = ['delete_comment']
-
-    def delete_comment(self, request, queryset):
-        queryset.update(text='Удалено администратором')
+# @admin.register(Comment)
+# class CommentAdmin(admin.ModelAdmin):
+#     def get_text(self, object):
+#         if len(object.text) > 15:
+#             try:
+#                 return object.text[:15]+'...'
+#             except:
+#                 return object.text
+#         else:
+#             try:
+#                 return object.text[:15]
+#             except:
+#                 return object.text
+#
+#
+#     get_text.short_description = 'Описание'
+#     list_display = ['user_name', 'get_text', 'news_name']
+#     list_filter = ['user_name']
+#     actions = ['delete_comment']
+#
+#     def delete_comment(self, request, queryset):
+#         queryset.update(text='Удалено администратором')

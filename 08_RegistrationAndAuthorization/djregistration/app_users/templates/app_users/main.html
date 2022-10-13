@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+</head>
+<body>
+<h2>Просмотр данных аккаунта</h2>
+{% if request.user.is_authenticated %}
+    <h3>Добро пожаловать на сайт {{ request.user.first_name }}</h3>
+    <p>Фамилия: {{ request.user.last_name }}</p>
+    <p>Почта: {{ request.user.email }}</p>
+    <p>Номер телефона: {{ request.user.profile.number }}</p>
+    <p>Город: {{ request.user.profile.city }}</p>
+    <p>Флаг верификации: {{ request.user.profile.verification }}</p>
+    <p>Кол-во новостей: {{ request.user.profile.count_news }}</p>
+{% else %}
+    <h3>Вы не авторизованны</h3>
+    <a href="{% url 'login' %}">Войти в аккаунт</a>
+{% endif %}
+Аутентификация прошла успешно
+</body>
+</html>

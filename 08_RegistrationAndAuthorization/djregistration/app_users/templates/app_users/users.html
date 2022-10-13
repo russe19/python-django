@@ -1,0 +1,38 @@
+<html>
+    <h1>Пользователи</h1>
+        <h3><a href="/news_list">Страница новостей</a></h3>
+        <ul>
+        {% for user in users %}
+            {% if user.profile %}
+            <li>
+                <h3>Пользователь: {{ user.first_name }} {{ user.last_name }}</h3>
+                <p>Почта: {{ user.email }}</p>
+                <p>Номер телефона: {{ user.profile.number }}</p>
+                <p>Город: {{ user.profile.city }}</p>
+                <p>Флаг верификации: {{ user.profile.verification }}</p>
+                <p>Кол-во новостей: {{ user.profile.count_news }}</p>
+                <form method="post" action="users">
+                    {% csrf_token %}
+                    {% if user.profile.verification %}
+                        <input type="radio" id="contactChoice1"
+                        name="user.profile.verification" value="True" checked>
+                        <label for="contactChoice1">Верифицирован</label>
+                        <input type="radio" id="contactChoice2"
+                        name="user.profile.verification" value="False">
+                        <label for="contactChoice2">Не верифицирован</label>
+                    {% else %}
+                        <input type="radio" id="contactChoice1"
+                        name="user.profile.verification" value="True">
+                        <label for="contactChoice1">Верифицирован</label>
+                        <input type="radio" id="contactChoice2"
+                        name="user.profile.verification" value="False" checked>
+                        <label for="contactChoice2">Не верифицирован</label>
+                    {% endif %}
+                    <input type="hidden" name="user.id" value={{ user.id }} />
+                    <button type="submit">Применить</button>
+                </form>
+            </li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+</html>

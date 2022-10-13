@@ -1,0 +1,58 @@
+<html>
+    <h1>Бесплатные объявления</h1>
+        <h3><a href="/users">Страница пользователей</a></h3>
+        <h4><a href="/create_groups">Создать необходимые группы пользователей</a></h4>
+        <ul>
+            {% if user %}
+            <li><h3><a href="/news/create">Создать новость</a></h3></li>
+            {% endif %}
+    {% if news_list %}
+        {% for news in news_list %}
+                {% if not moder and news.is_active %}
+                    <li>
+                    <a href="/news/{{ news.id }}"><h3>{{ news.name }}</h3></a>
+                    <p>Описание: {{ news.description }}</p>
+                    <p>Дата создания: {{ news.create_date }}</p>
+                    <p>Дата обновления: {{ news.update_date }}</p>
+                    {% if news.tag %}
+                        <p>Тэг: {{ news.tag }}</p>
+                    {% endif %}
+                    </li>
+                {% elif moder %}
+            <li>
+                    <a href="/news/{{ news.id }}"><h3>{{ news.name }}</h3></a>
+                    <p>Описание: {{ news.description }}</p>
+                    <p>Дата создания: {{ news.create_date }}</p>
+                    <p>Дата обновления: {{ news.update_date }}</p>
+                    {% if news.tag %}
+                        <p>Тэг: {{ news.tag }}</p>
+                    {% endif %}
+                    <p>Активность: {{ news.is_active }}</p>
+                {% endif %}
+                {% if moder %}
+                    <form method="post" action="news_list">
+                        {% csrf_token %}
+                        {% if news.is_active %}
+                            <input type="radio" id="contactChoice1"
+                            name="news.is_active" value="True" checked>
+                            <label for="contactChoice1">Активно</label>
+                            <input type="radio" id="contactChoice2"
+                            name="news.is_active" value="False">
+                            <label for="contactChoice2">Неактивно</label>
+                        {% else %}
+                            <input type="radio" id="contactChoice1"
+                            name="news.is_active" value="True">
+                            <label for="contactChoice1">Активно</label>
+                            <input type="radio" id="contactChoice2"
+                            name="news.is_active" value="False" checked>
+                            <label for="contactChoice2">Неактивно</label>
+                        {% endif %}
+                        <input type="hidden" name="news.id" value={{ news.id }} />
+                        <button type="submit">Изменить статус активности</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</html>
