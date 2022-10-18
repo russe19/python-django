@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная старница</title>
+</head>
+<body>
+<h2>Блог пользователя {{ user }}</h2>
+<p><a href="/logout">Выйти из под учетной записи</a> </p>
+<p><a href="/upload_entry">Опубликовать запись</a> </p>
+<p><a href="/upload_file">Загрузить записи с помощью CVS файла</a> </p>
+<p>Имя: {{ user.first_name }}</p>
+<p>Фамилия: {{ user.last_name }}</p>
+<p>Почта: {{ user.email }}</p>
+<p>Город: {{ user.profile.city }}</p>
+<p>Номер телефона: {{ user.profile.number }}</p>
+<a href="/update/{{ user.id }}">Редактировать профиль</a>
+<hr>
+    {% for entry in entres %}
+        <p>Запись номер {{ entry.id }}</p>
+        <p>Название записи: {{ entry.name }}</p>
+        <p>Описание: {{ entry.description|truncatechars:100 }}</p>
+        <p>
+        {% for i in images %}
+            {% if i.entry_id == entry.id %}
+                <img src=/media/{{ i.image }} width="150">
+            {% endif %}
+        {% endfor %}
+        </p>
+        <p><a href="/entry_detail{{ entry.id }}">Детальная страница новости</a> </p>
+        <hr>
+    {% endfor %}
+</body>
+</html>
