@@ -18,7 +18,7 @@ class Entry(models.Model):
         return self.name
 
 class EntryImage(models.Model):
-    entry = models.ForeignKey(Entry, verbose_name='Запись', on_delete=models.CASCADE, related_name='entry')
+    entry = models.ForeignKey(Entry, verbose_name='Запись', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='images/')
 
 

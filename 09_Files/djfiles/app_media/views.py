@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import UpdateView, View, TemplateView, ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User, Group
+from django.views.generic.edit import FormView
 import datetime
 
 class Login(LoginView):
@@ -16,41 +17,43 @@ class Logout(LogoutView):
     template_name = 'app_media/logout.html'
     next_page = 'entres'
 
-def regist_view(request):
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            user.first_name = form.cleaned_data.get('first_name')
-            user.last_name = form.cleaned_data.get('last_name')
-            user.email = form.cleaned_data.get('email')
-            user.save()
-            number = form.cleaned_data.get('number')
-            city = form.cleaned_data.get('city')
-            Profile.objects.create(user=user, number=number, city=city)
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            return redirect('/main')
-    else:
-        form = RegisterForm()
-    return render(request, 'app_media/register.html', {'form': form})
 
-class Update(UpdateView):
+class RegisterView(FormView):
+    form_class = RegisterForm
+    template_name = 'app_media/register.html'
+    success_url = '/main'
+
+    def form_valid(self, form):
+        user = form.save()
+        user.first_name = form.cleaned_data.get('first_name')
+        user.last_name = form.cleaned_data.get('last_name')
+        user.email = form.cleaned_data.get('email')
+        user.save()
+        number = form.cleaned_data.get('number')
+        city = form.cleaned_data.get('city')
+        Profile.objects.create(user=user, number=number, city=city)
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=password)
+        login(self.request, user)
+        return redirect('/main')
+
+
+
+class Update(UserPassesTestMixin, UpdateView):
     model = User
     template_name = 'app_media/update.html'
     success_url = reverse_lazy('main')
     fields = ['first_name', 'last_name', 'email']
-    
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.POST:
-            context["profile"] = RegisterFormUpdate(self.request.POST)
-        else:
-            context["profile"] = RegisterFormUpdate(instance=self.object.profile)
+        context["profile"] = RegisterFormUpdate(instance=self.object.profile)
         return context
+
+    def test_func(self):
+        return self.request.user.id == self.kwargs['pk']
 
     def form_valid(self, form):
         profile_model = Profile.objects.get(user_id=self.object.id)
@@ -65,80 +68,59 @@ class Main(ListView):
     context_object_name = 'entres'
     queryset = Entry.objects.all()
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['user'] = self.request.user
-        context['entres'] = Entry.objects.filter(user_id=self.request.user)
-        return context
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(user_id=self.request.user)
 
-class EntryList(UserPassesTestMixin, ListView):
+class EntryList(ListView):
     model = Entry
     template_name = 'app_media/entry_list.html'
     context_object_name = 'entres'
-    queryset = Entry.objects.all().order_by('created_at').reverse()
+    queryset = Entry.objects.all().order_by('-created_at')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['images'] = EntryImage.objects.values()
-        return context
-
-    def test_func(self):
-        return not self.request.user.is_authenticated
 
 class EntryDetail(DetailView):
     model = Entry
     template_name = 'app_media/entry_detail.html'
     context_object_name = 'entry'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['imag'] = EntryImage.objects.values().filter(entry_id=self.object.pk)
-        return context
 
-def upload_entry(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            form = EntryForm(request.POST, request.FILES)
-            if form.is_valid():
-                entry = Entry.objects.create(user=request.user,
-                                             name=request.POST['name'],
-                                             description=request.POST['description'])
-                entry.save()
-                for image in request.FILES.getlist('images'):
-                    entry_image = EntryImage.objects.create(entry=entry, image=image)
-                    entry_image.save()
-                return redirect('/main')
-        else:
-            form = EntryForm()
-        return render(request, 'app_media/entry_create.html', {'form': form})
-    raise Http404()
+class UploadEntry(LoginRequiredMixin, FormView):
+    form_class = EntryForm
+    template_name = 'app_media/entry_create.html'
+    success_url = '/main'
+
+    def form_valid(self, form):
+        entry = Entry.objects.create(user=self.request.user,
+                                     name=self.request.POST['name'],
+                                     description=self.request.POST['description'])
+        entry.save()
+        for image in self.request.FILES.getlist('images'):
+            entry_image = EntryImage.objects.create(entry=entry, image=image)
+            entry_image.save()
+        return redirect('/main')
 
 
-def upload_file(request):
-    if request.method == 'POST':
-        upload_file_form = UploadFileForm(request.POST, request.FILES)
-        if upload_file_form.is_valid():
-            file = request.FILES['file']
-            with file.open('r') as f:
-                s = f.read().decode('utf-8')
-                print('\n', s, '\n')
-                z = s.split('\n')
-                t = [i[:-1].split(';') for i in z if i != '']
-                print(t)
-                for i in t:
-                    d = i[1].split(', ')
-                    Entry.objects.create(name = request.POST['name'],
-                                         description = i[0],
-                                         created_at = datetime.date(int(d[0]), int(d[1]), int(d[2])))
+class UploadFile(FormView):
+    form_class = UploadFileForm
+    template_name = 'app_media/upload_files.html'
+    context_object_name = 'form'
+    success_url = '/main'
 
-            return HttpResponse(content=[file.name, ' ', file.size, ' ', s1], status=200)
-    else:
-        upload_file_form = UploadFileForm()
+    def form_valid(self, form):
+        file = self.request.FILES['file']
+        with file.open('r') as f:
+            s = f.read().decode('utf-8')
+            print('\n', s, '\n')
+            z = s.split('\n')
+            t = [i[:-1].split(';') for i in z if i != '']
+            print(t)
+            for i in t:
+                d = i[1].split(', ')
+                Entry.objects.create(name=self.request.POST['name'],
+                                     description=i[0],
+                                     created_at=datetime.date(int(d[0]), int(d[1]), int(d[2])))
 
-    context = {
-        'form': upload_file_form
-    }
-    return render(request, 'app_media/upload_files.html', context=context)
-
+        return redirect('/entres')
 
 

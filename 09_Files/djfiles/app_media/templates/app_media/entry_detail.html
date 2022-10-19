@@ -8,9 +8,8 @@
     <h3>Запись номер {{ entry.id }}</h3>
     <p>Название записи: {{ entry.name }}</p>
     <p>Описание: {{ entry.description }}</p>
-        {% for i in imag %}
-            <p><img src=/media/{{ i.image }} width="500"></p>
+        {% for image in entry.entryimage_set.all %}
+            <img src=/media/{{ image.image }} width="500">
         {% endfor %}
-    <hr>
 </body>
 </html>

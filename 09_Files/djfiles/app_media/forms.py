@@ -25,7 +25,8 @@ class RegisterFormUpdate(forms.ModelForm):
 class EntryForm(forms.Form):
     name = forms.CharField(max_length=50, help_text='Название записи')
     description = forms.CharField(widget=forms.Textarea, max_length=1000, help_text='Описание')
-    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}), help_text='Файлы')
+    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True})
+                              , help_text='Файлы', required=False)
 
 # class EntryForm(forms.Form):
 #     class Meta:

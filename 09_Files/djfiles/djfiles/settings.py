@@ -122,6 +122,8 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/main'
 
+LOGIN_URL = '/login'
+
 SESSION_COOKEI_AGE = 30 * 24 * 60 * 60
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
