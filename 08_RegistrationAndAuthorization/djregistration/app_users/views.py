@@ -154,5 +154,3 @@ class CreateNewsView(UserPassesTestMixin, CreateView):
         self.request.user.profile.count_news += 1
         self.request.user.profile.save()
         return context
-
-

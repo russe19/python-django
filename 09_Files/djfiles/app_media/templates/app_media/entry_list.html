@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Все записи</h2>
+{% if request.user.is_authenticated %}
+    <p><a href="/main">Страница пользователя</a> </p>
+    <p><a href="/logout">Выйти с сайта</a> </p>
+{% else %}
+    <p><a href="/login">Войти на сайт</a> </p>
+{% endif %}
+<p><a href="/upload_file">Загрузить записи с помощью CVS файла</a> </p>
+<hr>
+    {% for entry in entres %}
+        <h3>Запись номер {{ entry.id }}</h3>
+        <p>Название записи: {{ entry.name }}</p>
+        <p>Описание: {{ entry.description|truncatechars:100 }}</p>
+        {% for image in entry.entryimage_set.all %}
+            <img src=/media/{{ image.image }} width="150">
+        {% endfor %}
+        <p><a href="/entry_detail{{ entry.id }}">Детальная страница новости</a> </p>
+        <hr>
+
+    {% endfor %}
+</body>
+</html>
