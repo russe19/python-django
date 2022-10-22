@@ -9,12 +9,6 @@ class RegisterForm(UserCreationForm):
     number = forms.IntegerField(required=False, help_text='Номер телефона', min_value=100000, max_value=99999999999)
     city = forms.CharField(max_length=30, required=False, help_text='Город')
 
-# class RegisterFormUpdate(forms.ModelForm):
-#     first_name = forms.CharField(max_length=30, required=False, help_text='Имя')
-#     last_name = forms.CharField(max_length=30, required=False, help_text='Фамилия')
-#     email = forms.EmailField(required=False, help_text='Почта')
-#     number = forms.IntegerField(required=False, help_text='Номер телефона', min_value=100000, max_value=99999999999)
-#     city = forms.CharField(max_length=30, required=False, help_text='Город')
 
 class RegisterFormUpdate(forms.ModelForm):
     class Meta:
@@ -28,10 +22,6 @@ class EntryForm(forms.Form):
     images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True})
                               , help_text='Файлы', required=False)
 
-# class EntryForm(forms.Form):
-#     class Meta:
-#         model = Entry
-#         fields = ('name', 'description')
 
 class UploadFileForm(forms.Form):
     name = forms.CharField(max_length=50)
