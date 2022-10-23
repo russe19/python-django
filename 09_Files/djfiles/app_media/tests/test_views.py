@@ -71,7 +71,6 @@ class MainUpdateTest(TestCase):
         self.assertTrue(response.context['user'].is_active)
         self.assertEqual(response.context['user'].email, 'passwordTest123_new@bk.ru')
         self.assertEqual(response.context['user'].profile.city, 'New')
-        print(response.context['user'])
 
 
     def test_main(self):
@@ -81,34 +80,32 @@ class MainUpdateTest(TestCase):
         self.assertContains(response, 'Блог пользователя')
 
 
-# class DetailContextTest(TestCase):
-#     def setUp(self) -> None:
-#         data = {
-#             'username': 'test123',
-#             'email': 'passwordTest123@bk.ru',
-#             'password1': 'passwordTest123',
-#             'password2': 'passwordTest123',
-#             'number': 891234567,
-#             'city': 'Moskow'
-#         }
-#         response = self.client.post('/register/', data)
-#         response = self.client.post('/login/', {'username': 'test123', 'password': 'passwordTest123'}, follow=True)
-#
-#
-#     def test_context(self):
-#         request = RequestFactory().get('/update/1')
-#         data = {
-#             'first_name': 'test123_new',
-#             'last_name': 'test_new',
-#             'email': 'passwordTest123_new@bk.ru',
-#             'number': 5555555,
-#             'city': 'New'
-#         }
-#         request = RequestFactory().post('/update/1', data, follow=True)
-#         view = Update()
-#         view.setup(request)
-#         context = view.get_context_data()
-#         self.assertIn('profile', context)
+class DetailContextTest(TestCase):
+    def setUp(self) -> None:
+        data = {
+            'username': 'test123',
+            'email': 'passwordTest123@bk.ru',
+            'password1': 'passwordTest123',
+            'password2': 'passwordTest123',
+            'number': 891234567,
+            'city': 'Moskow'
+        }
+        response = self.client.post('/register/', data)
+        response = self.client.post('/login/', {'username': 'test123', 'password': 'passwordTest123'}, follow=True)
+
+    def test_context(self):
+        data = {
+            'first_name': 'test123_new',
+            'last_name': 'test_new',
+            'email': 'passwordTest123_new@bk.ru',
+            'number': 5555555,
+            'city': 'New'
+        }
+        response = self.client.post('/update/1', data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['user'].first_name, 'test123_new')
+        self.assertEqual(response.context['user'].profile.number, 5555555)
+        self.assertEqual(response.context['user'].profile.city, 'New')
 
 
 class EntryTest(TestCase):
@@ -145,6 +142,7 @@ class UploadTest(TestCase):
         image = SimpleUploadedFile(image_jpg.name, image_jpg.read())
         response = self.client.post('/upload_entry/', {'name': 'Запись', 'description': 'Описание', 'images': image}, follow=True)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(EntryImage.objects.all().count(), 1)
 
 class UploadFileTest(TestCase):
     def test_upload_file(self):
@@ -152,5 +150,8 @@ class UploadFileTest(TestCase):
         file_csv = open(os.path.join(cwd, 'app_media', 'tests', 'tests_file', 'file.csv'), "rb")
         file = SimpleUploadedFile(file_csv.name, file_csv.read())
         response = self.client.post('/upload_file/', {'name': 'Имя', 'file': file}, follow=True)
+        self.assertEqual(file.name, 'file.csv')
+        self.assertContains(response, 'dfghdt')
+        self.assertEqual(response.context['entres'].count(), 2)
         self.assertEqual(response.status_code, 200)
 
