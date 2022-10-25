@@ -94,7 +94,6 @@ class UploadEntry(LoginRequiredMixin, FormView):
         entry = Entry.objects.create(user=self.request.user,
                                      name=self.request.POST['name'],
                                      description=self.request.POST['description'])
-        entry.save()
         for image in self.request.FILES.getlist('images'):
             entry_image = EntryImage.objects.create(entry=entry, image=image)
             entry_image.save()
@@ -111,10 +110,8 @@ class UploadFile(FormView):
         file = self.request.FILES['file']
         with file.open('r') as f:
             s = f.read().decode('utf-8')
-            print('\n', s, '\n')
             z = s.split('\n')
             t = [i[:-1].split(';') for i in z if i != '']
-            print(t)
             for i in t:
                 d = i[1].split(', ')
                 Entry.objects.create(name=self.request.POST['name'],
