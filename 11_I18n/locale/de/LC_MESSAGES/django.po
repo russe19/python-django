@@ -8,20 +8,191 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-23 08:33+0000\n"
+"POT-Creation-Date: 2022-10-27 00:01+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: templates/translation_example.html:6
+#: .\app_goods\apps.py:7 .\app_goods\models.py:10
+msgid "goods"
+msgstr "waren"
+
+#: .\app_goods\models.py:6
+msgid "code"
+msgstr "code"
+
+#: .\app_goods\models.py:7
+msgid "price"
+msgstr "pries"
+
+#: .\app_goods\models.py:11
+msgid "good"
+msgstr "gut"
+
+#: .\app_pages\views.py:12
+#, python-format
+msgid "Hello there! Today is %(date)s %(time)s"
+msgstr "Hallo. Heute ist %(date)s %(time)s"
+
+#: .\templates\employment\vacancy.html:4
+msgid "Vacancies"
+msgstr "Stellenangebote"
+
+#: .\templates\employment\vacancy.html:17
+msgid "No vacancies."
+msgstr "Keine stellenangebote"
+
+#: .\templates\goods\items_list.html:4
+msgid "Product list"
+msgstr "Produktliste"
+
+#: .\templates\goods\items_list.html:10
+msgid "Vendor code"
+msgstr "vectorcode"
+
+#: .\templates\goods\items_list.html:11
+msgid "Price"
+msgstr "pries"
+
+#: .\templates\goods\items_list.html:24
+msgid "No products"
+msgstr "keine produkte"
+
+#: .\templates\goods\upload_price_file.html:7
+msgid "Download price file"
+msgstr "Preisdatei herunterladen"
+
+#: .\templates\goods\upload_price_file.html:15
+#: .\templates\media\upload_file.html:16
+msgid "Upload file"
+msgstr "Datei hochladen"
+
+#: .\templates\greetings.html:7
+msgid "What time is it?"
+msgstr "wie spat ist es"
+
+#: .\templates\main.html:6
+msgid "Main page"
+msgstr "Jauptseite"
+
+#: .\templates\main.html:11 .\templates\users\account.html:13
+msgid "Welcome to the site"
+msgstr "Willkommen auf der Website"
+
+#: .\templates\main.html:13
+msgid "Birthday"
+msgstr "Geburtstag"
+
+#: .\templates\main.html:14
+msgid "City"
+msgstr "Stadt"
+
+#: .\templates\main.html:16
+msgid "You are not authorized on our site."
+msgstr "Sie sind auf unserer website nicht autorisiert"
+
+#: .\templates\main.html:17 .\templates\users\account.html:23
+#: .\templates\users\login.html:6 .\templates\users\login.html:14
+msgid "Login"
+msgstr "aumeldeng"
+
+#: .\templates\main.html:19
+msgid "I - main page"
+msgstr "Ich - hauptseite"
+
+#: .\templates\media\file_form_upload.html:7
+msgid "File update"
+msgstr "Dateiaktualisierung"
+
+#: .\templates\media\file_form_upload.html:15
+msgid "Download"
+msgstr "Download"
+
+#: .\templates\media\resize_image.html:7
+msgid "Image reduction"
+msgstr "Bildverkleinerung"
+
+#: .\templates\media\resize_image.html:16
+msgid "Reduce the picture"
+msgstr "Das bild verkleinern"
+
+#: .\templates\media\upload_file.html:7
+msgid "File upload"
+msgstr "Dateiaktualisierung"
+
+#: .\templates\media\upload_files.html:7
+msgid "Files upload"
+msgstr "Dateiaktualisierung"
+
+#: .\templates\media\upload_files.html:16
+msgid "Upload files"
+msgstr "Dateien akrualisieren"
+
+#: .\templates\translation_example.html:6
 msgid "Our translation page title."
 msgstr "Der Titel unserer Übersetzungsseite."
 
-#: templates/translation_example.html:9
+#: .\templates\translation_example.html:12
 msgid "Translated text."
 msgstr "Übersetzter Text."
+
+#: .\templates\translation_example.html:25
+msgid "Welcome to our page"
+msgstr "Willkommen auf unserer seite"
+
+#: .\templates\users\account.html:7
+msgid "Profile"
+msgstr "Profil"
+
+#: .\templates\users\account.html:19
+msgid "Avatar not loader"
+msgstr "Avatar nicht lader"
+
+#: .\templates\users\account.html:22
+msgid "You are not logged in to the our site."
+msgstr "Sie melden sich nicht auf unserer website an"
+
+#: .\templates\users\edit_account.html:7
+msgid "Profile change"
+msgstr "Profilanderung"
+
+#: .\templates\users\edit_account.html:15
+msgid "Update"
+msgstr "aktualisieren"
+
+#: .\templates\users\login.html:10
+msgid "Login page"
+msgstr "Loginseite"
+
+#: .\templates\users\logout.html:6
+msgid "Logout"
+msgstr "Auslogger"
+
+#: .\templates\users\logout.html:11
+msgid "You have successfully logged out of your account"
+msgstr "Sie haben sich erfolgreich von ihrem Konto abgemeldet"
+
+#: .\templates\users\register.html:7 .\templates\users\register.html:12
+msgid "Registration"
+msgstr "Anmeldung"
+
+#: .\templates\users\register.html:16
+msgid "Sign up"
+msgstr "Anmelden"
+
+#: .\templates\users\restore_password.html:7
+msgid "Password recovery"
+msgstr "Passwort-wiederherste llung"
+
+#: .\templates\users\restore_password.html:15
+msgid "Recover password"
+msgstr "Password wiederherstellen"
+
+#: .\templates\welcome.html:6 .\templates\welcome.html:10
+msgid "Welcome!"
+msgstr "Willkommen!"

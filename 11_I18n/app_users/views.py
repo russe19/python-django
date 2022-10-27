@@ -22,37 +22,37 @@ class AnotherLoginView(LoginView):
 
 
 class AnotherLogoutView(LogoutView):
-    # template_name = 'users/logout.html'
+    template_name = 'users/logout.html'
     next_page = '/'
 
 
-def login_view(request):
-    if request.method == 'POST':
-        auth_form = AuthForm(request.POST)
-        if auth_form.is_valid():
-            username = auth_form.cleaned_data['username']
-            password = auth_form.cleaned_data['password']
-            user = authenticate(username=username, password=password)
-            if user:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponse('Вы успешно авторизованы')
-                else:
-                    auth_form.add_error('__all__', 'Ошибка! Учетная запись пользователя неактивна.')
-            else:
-                auth_form.add_error('__all__', 'Ошибка! Проверьте правильность написания логина и пароля.')
-    else:
-        auth_form = AuthForm()
-
-    context = {
-        'form': auth_form
-    }
-    return render(request, 'users/login.html', context=context)
-
-
-def logout_view(request):
-    logout(request)
-    return HttpResponse('Вы успешно вышли из под своей учетной записи')
+# def login_view(request):
+#     if request.method == 'POST':
+#         auth_form = AuthForm(request.POST)
+#         if auth_form.is_valid():
+#             username = auth_form.cleaned_data['username']
+#             password = auth_form.cleaned_data['password']
+#             user = authenticate(username=username, password=password)
+#             if user:
+#                 if user.is_active:
+#                     login(request, user)
+#                     return HttpResponse('Вы успешно авторизованы')
+#                 else:
+#                     auth_form.add_error('__all__', 'Ошибка! Учетная запись пользователя неактивна.')
+#             else:
+#                 auth_form.add_error('__all__', 'Ошибка! Проверьте правильность написания логина и пароля.')
+#     else:
+#         auth_form = AuthForm()
+#
+#     context = {
+#         'form': auth_form
+#     }
+#     return render(request, 'users/login.html', context=context)
+#
+#
+# def logout_view(request):
+#     logout(request)
+#     return HttpResponse('Вы успешно вышли из под своей учетной записи')
 
 
 def register_view(request):

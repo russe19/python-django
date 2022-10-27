@@ -1,29 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'app_media/base.html' %}
+{% load i18n %}
+
+{% block title %}
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{% trans "Entry list" %}</title>
 </head>
-<body>
-<h2>Все записи</h2>
+{% endblock %}
+
+{% block content %}
+<h2>{% trans "All entry" %}</h2>
 {% if request.user.is_authenticated %}
-    <p><a href="/main">Страница пользователя</a> </p>
-    <p><a href="/logout">Выйти с сайта</a> </p>
+    <p><a href="/main">{% trans "User page" %}</a> </p>
+    <p><a href="/logout">{% trans "Logout" %}</a> </p>
 {% else %}
-    <p><a href="/login">Войти на сайт</a> </p>
+    <p><a href="/login">{% trans "Login" %}</a> </p>
 {% endif %}
-<p><a href="/upload_file">Загрузить записи с помощью CVS файла</a> </p>
+<p><a href="/upload_file">{% trans "Load data using CSV file" %}</a> </p>
 <hr>
     {% for entry in entres %}
-        <h3>Запись номер {{ entry.id }}</h3>
-        <p>Название записи: {{ entry.name }}</p>
-        <p>Описание: {{ entry.description|truncatechars:100 }}</p>
+        <h3>{% trans "Intry id" %} {{ entry.id }}</h3>
+        <p>{% trans "Name entry" %}: {{ entry.name }}</p>
+        <p>{% trans "Description" %}: {{ entry.description|truncatechars:100 }}</p>
         {% for image in entry.entryimage_set.all %}
             <img src=/media/{{ image.image }} width="150">
         {% endfor %}
-        <p><a href="/entry_detail{{ entry.id }}">Детальная страница новости</a> </p>
+        <p><a href="/entry_detail{{ entry.id }}">{% trans "Detail page" %}</a> </p>
         <hr>
 
     {% endfor %}
-</body>
-</html>
+{% endblock %}

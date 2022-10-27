@@ -8,6 +8,7 @@ from django.views.generic import UpdateView, View, TemplateView, ListView, Detai
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User, Group
 from django.views.generic.edit import FormView
+from django.utils.translation import gettext as _
 import datetime
 
 class Login(LoginView):
